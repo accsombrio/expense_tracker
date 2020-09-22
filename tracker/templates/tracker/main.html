@@ -49,7 +49,7 @@
                         <span class="icon-bar bar3"></span>
                     </button>
                     
-                    {% if request.resolver_match.view_name == 'dashboard' %}
+                    {% if 'dashboard' in request.resolver_match.view_name %}
                         <a class="navbar-brand" href="#">
                             Welcome, {{ request.user.username }}!
                         </a>
@@ -71,7 +71,7 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {% if request.resolver_match.view_name == 'dashboard' and not no_transactions %}
+                        {% if 'dashboard' in request.resolver_match.view_name and not no_transactions %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="ti-calendar"></i>
