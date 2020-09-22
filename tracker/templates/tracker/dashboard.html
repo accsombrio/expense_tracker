@@ -1,158 +1,164 @@
 {% extends  'tracker/main.html' %}
 {% load humanize %}
 {% block content %}
-  <div class="row">
-    <div class="col-lg-4 col-sm-6">
-        <div class="card">
-            <div class="content">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <div class="icon-big text-center">
-                            <i class="ti-wallet"></i>
+    {% if no_transactions %}
+    <div class="card-plain">
+        You do not have any transactions yet. Please add a transaction in the <a href="{% url 'transactions' %}">Transactions</a> section. 
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="icon-big text-center">
+                                <i class="ti-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="numbers">
+                                <p>Current Balance</p>
+                                {{ current_balance|floatformat:2|intcomma }}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-9">
-                        <div class="numbers">
-                            <p>Current Balance</p>
-                            {{ current_balance|floatformat:2|intcomma }}
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Last Update: {{ balance_date.date_created|date }} {{ balance_date.date_created|time:"f A" }}
                         </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <hr />
-                    <div class="stats">
-                        Last Update: {{ balance_date|date }} {{ balance_date|time:"f A" }}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4 col-sm-6">
-        <div class="card">
-            <div class="content">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <div class="icon-big icon-success text-center">
-                            <i class="ti-money"></i>
+        <div class="col-lg-4 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-money"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="numbers">
+                                <p>Income</p>
+                                {{ income_total|floatformat:2|intcomma }}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-9">
-                        <div class="numbers">
-                            <p>Income</p>
-                            {{ income_total|floatformat:2|intcomma }}
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Last Update: {{ income_date.date_created|date }} {{ income_date.date_created|time:"f A" }}
                         </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <hr />
-                    <div class="stats">
-                        Last Update: {{ income_date|date }} {{ income_date|time:"f A" }}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4 col-sm-6">
-        <div class="card">
-            <div class="content">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <div class="icon-big icon-warning text-center">
-                            <i class="ti-server"></i>
+        <div class="col-lg-4 col-sm-6">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-server"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="numbers">
+                                <p>Expenses</p>
+                                {{ expenses_total|floatformat:2|intcomma }}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-9">
-                        <div class="numbers">
-                            <p>Expenses</p>
-                            {{ expenses_total|floatformat:2|intcomma }}
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Last Update: {{ expenses_date.date_created|date }} {{ expenses_date.date_created|time:"f A" }}
                         </div>
-                    </div>
-                </div>
-                <div class="footer">
-                    <hr />
-                    <div class="stats">
-                        Last Update: {{ expenses_date|date }} {{ expenses_date|time:"f A" }}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="header">
-                <h4 class="title">Latest Expenses</h4>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Latest Expenses</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-striped">
+                        <thead>
+                            <th width="18%">Category</th>
+                            <th class="text-center">Name</th>
+                          <th class="text-center">Amount</th>
+                          <th width="33%" class="text-center">Date</th>
+                        </thead>
+                        <tbody>
+                            {% for row in latest_expenses %}
+                                <tr>
+                                    <td class="category">{{ row.category }}</td>
+                                    <td>{{ row.title }}</td>
+                                    <td class="text-right">{{ row.amount|floatformat:2|intcomma }}</td>
+                                    <td class="text-right">{{ row.date_created|date }} {{ row.date_created|time:"f A" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    
+                </div>
             </div>
-            <div class="content table-responsive table-full-width">
-                <table class="table table-striped">
-                    <thead>
-                        <th width="18%">Category</th>
-                        <th class="text-center">Name</th>
-                      <th class="text-center">Amount</th>
-                      <th width="33%" class="text-center">Date</th>
-                    </thead>
-                    <tbody>
-                        {% for row in latest_expenses %}
+        </div>
+        <div class="col-md-4">
+            <div class="card card-plain">
+                <div class="header">
+                    <h4 class="title">Expenses by Category</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-hover">
+                        <thead>
+                          <th>Category</th>
+                          <th class="text-right">Amount</th>
+                        </thead>
+                        <tbody>
                             <tr>
-                                <td class="category">{{ row.category }}</td>
-                                <td>{{ row.title }}</td>
-                                <td class="text-right">{{ row.amount|floatformat:2|intcomma }}</td>
-                                <td class="text-right">{{ row.date_created|date }} {{ row.date_created|time:"f A" }}</td>
+                              <td>Food and Consumables</td>
+                              <td class="text-right">{{ food_total|floatformat:2|intcomma }}</td>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
+                            <tr>
+                                <td>Hobbies</td>
+                                <td class="text-right">{{ hobbies_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                                <td>Investment</td>
+                                <td class="text-right">{{ investment_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                              <td>Rent</td>
+                              <td class="text-right">{{ rent_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                              <td>Transportation</td>
+                              <td class="text-right">{{ transportation_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                                <td>Utilities</td>
+                                <td class="text-right">{{ utilities_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                              <td>Others</td>
+                              <td class="text-right">{{ others_total|floatformat:2|intcomma }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card card-plain">
-            <div class="header">
-                <h4 class="title">Expenses by Category</h4>
-            </div>
-            <div class="content table-responsive table-full-width">
-                <table class="table table-hover">
-                    <thead>
-                      <th>Category</th>
-                      <th class="text-right">Amount</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td>Food and Consumables</td>
-                          <td class="text-right">{{ food_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                            <td>Hobbies</td>
-                            <td class="text-right">{{ hobbies_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                            <td>Investment</td>
-                            <td class="text-right">{{ investment_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                          <td>Rent</td>
-                          <td class="text-right">{{ rent_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                          <td>Transportation</td>
-                          <td class="text-right">{{ transportation_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                            <td>Utilities</td>
-                            <td class="text-right">{{ utilities_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                        <tr>
-                          <td>Others</td>
-                          <td class="text-right">{{ others_total|floatformat:2|intcomma }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-    </div>
-  </div>
+      </div>
+    {% endif %}
 {% endblock %}
 

@@ -30,6 +30,9 @@ def dashboard(request, period='month'):
     else:
         transactions = Transaction.objects.filter(user=request.user,date_created__gte=datetime.now()-timedelta(days=365, hours=6))
 
+    if not transactions:
+        return render(request, 'tracker/dashboard.html', {'no_transactions': True})
+
     category_totals = {}
 
     for category in Transaction._meta.get_field('category').choices:
@@ -41,11 +44,11 @@ def dashboard(request, period='month'):
 
     context = {'page': 'dashboard',
             'current_balance': current_balance,
-            'balance_date': transactions.order_by('-date_created')[0].date_created,
-            'expenses_total' : expenses_total.aggregate(sum=Sum('amount')).get('sum'),
-            'expenses_date': expenses_total[0].date_created,
-            'income_total': income_total.aggregate(sum=Sum('amount')).get('sum'),
-            'income_date': income_total[0].date_created,
+            'balance_date': transactions.order_by('-date_created').first(),
+            'expenses_total' : expenses_total.aggregate(sum=Sum('amount')).get('sum') or 0,
+            'expenses_date': expenses_total.first(),
+            'income_total': income_total.aggregate(sum=Sum('amount')).get('sum') or 0,
+            'income_date': income_total.first(),
             'food_total': category_totals['Food and Consumables'],
             'investment_total': category_totals['Investments'],
             'hobbies_total': category_totals['Hobbies'],
@@ -53,7 +56,7 @@ def dashboard(request, period='month'):
             'transportation_total': category_totals['Transportation'],
             'utilities_total': category_totals['Utilities'],
             'others_total': category_totals['Others'],
-            'latest_expenses': expenses_total[:5],
+            'latest_expenses': expenses_total[:5] or None,
             'period': period}
     return render(request, 'tracker/dashboard.html', context)
 
@@ -122,11 +125,14 @@ def userBalance(request):
     current_balance = Transaction.objects.get_user_total_transactions(
         request.user)
     user_records = Transaction.objects.filter(
-        user=request.user).order_by('-date_created')[:5]
+        user=request.user).order_by('-date_created')
     initial_balance = current_balance
     history = []
 
-    for row in user_records:
+    if not user_records:
+        return render(request, 'tracker/balance.html', {'no_records': True})
+
+    for row in user_records[:5]:
 
         history.append((row.date_created, row.amount, initial_balance))
         initial_balance = initial_balance - row.amount
@@ -182,3 +188,7 @@ def settings(request):
         'u_form': u_form
     }
     return render(request, 'tracker/settings.html', context)
+
+def about(request):
+    context = {}
+    return render(request, 'tracker/about.html', context)

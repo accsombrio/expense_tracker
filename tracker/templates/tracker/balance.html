@@ -1,6 +1,11 @@
 {% extends  'tracker/main.html' %}
 {% load humanize %}
 {% block content %}
+{% if no_records %}
+    <div class="card-plain">
+        You do not have any transactions yet. Please add a transaction in the <a href="{% url 'transactions' %}">Transactions</a> section. 
+    </div>
+{% else %}
     <div class="row">
         <div class="col-lg-2 col-md-2 col-sm-2"></div>
         <div class="col-lg-8 col-md-8 col-sm-8">
@@ -52,4 +57,6 @@
             </div>
         </div>
     </div>
+{% endif %}
+    
 {% endblock %}
