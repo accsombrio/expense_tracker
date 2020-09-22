@@ -31,7 +31,7 @@ def dashboard(request, period='month'):
         transactions = Transaction.objects.filter(user=request.user,date_created__gte=datetime.now()-timedelta(days=365, hours=6))
 
     if not transactions:
-        return render(request, 'tracker/dashboard.html', {'no_transactions': True})
+        return render(request, 'tracker/dashboard.html', {'page': 'dashboard','no_transactions': True})
 
     category_totals = {}
 
@@ -130,7 +130,7 @@ def userBalance(request):
     history = []
 
     if not user_records:
-        return render(request, 'tracker/balance.html', {'no_records': True})
+        return render(request, 'tracker/balance.html', {'page': 'balance','no_records': True})
 
     for row in user_records[:5]:
 
