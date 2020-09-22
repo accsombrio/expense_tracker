@@ -1,0 +1,56 @@
+{% extends "users/main.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4"></div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Login</h4>
+                    <hr/>
+                </div>
+                <div class="content">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>{{ form.username.label }}: </label>
+                            <input class="form-control border-input" id="{{ form.username.label.id_for_label }}" name="{{ form.username.html_name }}" type="text" />
+                            {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </div>
+                        <div class="form-group">
+                            <label>{{ form.password.label }}: </label>
+                            <input class="form-control border-input" id="{{ form.password.id_for_label }}" name="{{ form.password.html_name }}" type="password" />
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-info btn-fill" type="submit">Login</button><br>
+                            <small><a href="{% url 'password_reset' %}">Forgot Password?</a></small>
+                        </div>
+                    </form>
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if form.errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,68 @@
+
+{% extends  'tracker/main.html' %}
+{% load humanize %}
+{% block content %}
+    {% for entry in transactions %}
+        <div class="row">
+            <div class="col-lg-1 col-md-1"></div>
+            <div class="card col-lg-10 card col-md-10"  style="margin-bottom: 10px;">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div>
+                                <!-- icon for transaction category-->
+                                <span class="category">{{ entry.date_created|date }} {{ entry.date_created|time:"f A" }}</span>
+
+                                {% if entry.category == 'Income' %}
+                                    <a href="{% url 'transaction-detail' entry.id %}">
+                                        <p class="text-success">{{ entry.title }}</p>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'transaction-detail' entry.id %}" style="color: black;">
+                                        <p>{{ entry.title }}</p>
+                                    </a>
+                                {% endif %}
+                                
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="numbers">
+                                {{ entry.amount|floatformat:2|intcomma }}
+                                <p class="category">{{ entry.category }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+    <div class="card-plain">
+        You do not have any transactions.
+    </div>
+    {% endfor %}
+    {% if is_paginated %}
+        <div class="row">
+            <div class="col-lg-1 col-md-1"></div>
+            <div class=" col-lg-10 col-md-10" style="text-align: center;">
+            {% if page_obj.has_previous %}
+                <a class="btn" href="?page=1">First Page</a>
+                <a class="btn" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a class="btn btn-fill" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a class="btn" href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn" href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
+            {% endif %}
+        </div>
+        </div>
+    {% endif %}
+    
+{% endblock %}

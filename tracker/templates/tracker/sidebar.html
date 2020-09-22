@@ -1,0 +1,60 @@
+{% load static %}
+
+<div class="sidebar" data-background-color="white" data-active-color="danger">
+
+    <!--
+		Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+		Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+	-->
+
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a href="{% url 'dashboard' %}" class="simple-text">
+                EXPENSE TRACKER
+            </a>
+        </div>
+
+        <ul class="nav">
+            {% if page == 'dashboard' %}
+                <li class="active">
+            {% else %}
+                <li>
+            {% endif %}
+                <a href="{% url 'dashboard' %}">
+                    <i class="ti-pie-chart"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            {% if 'transaction' in request.resolver_match.view_name %}
+                <li class="active">
+            {% else %}
+                <li>
+            {% endif %}
+                <a href="{% url 'transactions' %}">
+                    <i class="ti-bar-chart-alt"></i>
+                    <p>Transactions</p>
+                </a>
+            </li>
+            {% if 'balance' in request.resolver_match.view_name %}
+                <li class="active">
+            {% else %}
+                <li>
+            {% endif %}
+                <a href="{% url 'balance' %}">
+                    <i class="ti-credit-card"></i>
+                    <p>Balance</p>
+                </a>
+            </li>
+            {% if page == 'settings' %}
+                <li class="active">
+            {% else %}
+                <li>
+            {% endif %}
+                <a href="{% url 'settings' %}">
+                    <i class="ti-settings"></i>
+                    <p>Settings</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

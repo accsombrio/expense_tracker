@@ -1,0 +1,55 @@
+{% extends  'tracker/main.html' %}
+{% load humanize %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2"></div>
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="card">
+                <div class="content">
+                    <div class="numbers">
+                        <p class="category">Current Balance:</p>
+                        {{ current_balance|floatformat:2|intcomma }}
+                    </div>
+                    <div class="footer">
+                        <hr />
+                        <div class="stats">
+                            Last Update: {{ last_update|date }} {{ last_update|time:"f A" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card card-plain">
+            <h4 class="title">Latest Activities</h4>
+            <div class="content table-responsive table-full-width">
+                <table class="table table-hover">
+                    <thead>
+                        <th>Date</th>
+                        <th class="text-right">Received</th>
+                        <th class="text-right">Deductions</th>
+                        <th class="text-right">Amount</th>
+                    </thead>
+                    <tbody>
+                        {% for row in records %}
+                        <tr>
+                            <td>{{ row.0|date }} {{ row.0|time:"f A" }}</td>
+
+                            {% if row.1 >= 0%}
+                                <td class="text-right">{{ row.1|floatformat:2|intcomma }}</td>
+                                <td></td>
+                            {% else %}
+                                <td></td>
+                                <td class="text-right">{{ row.1|floatformat:2|intcomma|slice:"1:" }}</td>
+                            {% endif %}
+                            <td  class="text-right">{{ row.2|floatformat:2|intcomma }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends  'tracker/main.html' %}
+{% load humanize %}
+{% block content %}
+<div class="card card-plain">
+    <div class="content table-responsive table-full-width">
+        <table class="table table-hover">
+            <thead>
+                <th>Date</th>
+                <th class="text-right">Received</th>
+                <th class="text-right">Deductions</th>
+                <th class="text-right">Amount</th>
+            </thead>
+            <tbody>
+                {% for row in paginator %}
+                <tr>
+                    <td>{{ row.0|date }} {{ row.0|time:"f A" }}</td>
+
+                    {% if row.1 >= 0%}
+                        <td class="text-right">{{ row.1|floatformat:2|intcomma }}</td>
+                        <td class="text-right"></td>
+                    {% else %}
+                        <td class="text-right"></td>
+                        <td class="text-right">{{ row.1|floatformat:2|intcomma|slice:"1:" }}</td>
+                    {% endif %}
+                    <td class="text-right">{{ row.2|floatformat:2|intcomma }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% if paginator.has_other_pages %}
+        <div class="row">
+            <div class="col-lg-1 col-md-1"></div>
+            <div class=" col-lg-10 col-md-10" style="text-align: center;">
+            {% if paginator.has_previous %}
+                <a class="btn" href="?page=1">First Page</a>
+                <a class="btn" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% for num in paginator.paginator.page_range %}
+                {% if paginator.number == num %}
+                    <a class="btn btn-fill" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > paginator.number|add:'-3' and num < paginator.number|add:'3' %}
+                    <a class="btn" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginator.has_next %}
+                <a class="btn" href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a class="btn" href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
+            {% endif %}
+        </div>
+        </div>
+    {% endif %}
+{% endblock %}
