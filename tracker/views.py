@@ -189,6 +189,3 @@ def settings(request):
     }
     return render(request, 'tracker/settings.html', context)
 
-def about(request):
-    context = {}
-    return render(request, 'tracker/about.html', context)

@@ -27,4 +27,6 @@ def logoutUser(request):
     messages.success(request, f'Logout successful!')
     return redirect('login')
 
-
+def about(request):
+    context = {}
+    return render(request, 'users/about.html', context)
