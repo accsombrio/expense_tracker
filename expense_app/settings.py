@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
+ADMIN_ENABLED = (os.environ.get('ADMIN_ENABLED') == 'True')
 
 ALLOWED_HOSTS = ['trackyourexpensesapp.herokuapp.com', 'localhost']
 
